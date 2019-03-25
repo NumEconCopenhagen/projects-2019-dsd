@@ -3,18 +3,22 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-countries = ['DK','ZA','US','GB','CN','IN','BR','CA','RU','TR','KR','VN','SE','DE','AL','FR','BG','IT','PK','ID','MX','PL']
+#countries = ['DK','ZA','US','GB','CN','IN','BR','CA','RU','TR','KR','VN','SE','DE','AL','FR','BG','IT','PK','ID','MX','PL']
+
+countries = ['WLD', 'TSA', 'TMN', 'ECS', 'TEA', 'SSF', 'NAC', 'LCN']
 
 from pandas_datareader import wb
 pop = wb.download(indicator='SP.POP.TOTL', country=countries, start=1970, end=2017)
 pop.head(3)
 
-gdp = wb.download(indicator='NY.GDP.PCAP.KD', country=countries, start=1970, end=2017)
+gdp = wb.download(indicator='NY.GDP.MKTP.KD', country=countries, start=1970, end=2017)
 gdp.head(3)
 
 merged = pd.merge(gdp,pop, how='inner', on=['country','year'])
 merged = merged.reset_index()
-merged = merged.rename(columns = {'NY.GDP.PCAP.KD' : 'gdp', 'SP.POP.TOTL' : 'pop'})
+merged = merged.rename(columns = {'NY.GDP.MKTP.KD' : 'gdp', 'SP.POP.TOTL' : 'pop'})
+
+merged['gdp_cap'] = merged['gdp'] / merged['pop']
 merged.head(3)
 
 fig1 = plt.figure()
