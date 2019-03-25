@@ -17,11 +17,14 @@ df_names = {
 
 }
 
-df =  wb.download(indicator=variables, country=countries, start=1970, end=2017).reset_index()
+df =  wb.download(indicator=variables, country=countries, start=1980, end=2017).reset_index()
 df = df.rename(columns=df_names)
-df.head()
 
-#df[""] = df[""] / df[""]
+df["gdp_cap"] = df["GDP"] / df["population"]
+
+df["g_pop_1970_2017"]=(df.population[df.year == "2017"]-df.population[df.year == "1980"]/df.population[df.year == "1980"]
+
+df.head(50)
 
 #%%
 figur1 = plt.figure()
