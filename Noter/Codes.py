@@ -27,3 +27,12 @@ figur1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),ncol=5) # Put a le
 
 #Måden hvorpå man omdanner til numeric
 merged['year'] = merged['year'].apply(pd.to_numeric)
+
+#Eksempel
+merged['year'] = merged['year'].apply(pd.to_numeric)
+is_div5 = numerged%5==0
+print(is_div5.head(33))
+
+merged_div5 = merged[is_div5]
+print(merged_div5.shape)
+merged_div5.head(5)
