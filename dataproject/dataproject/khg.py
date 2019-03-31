@@ -79,20 +79,18 @@ merged_5_change.name = 'growth_5'
 
 merged_5 = merged_5.join(merged_5_change)
 merged_5.reset_index(inplace=True)
+merged_5 = merged_5[merged_5['year'].isin(['1975','1980','1985','1990','1995','2000','2005','2010','2015'])]
 
 # Bar plot with dropdown widget:
 
 def plot(dataframe, continent):
     I = dataframe['continent'] == continent
     dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5')
-    pd.year('2015','2015')
 
 widgets.interact(plot, 
     dataframe = widgets.fixed(merged_5),
     continent = widgets.Dropdown(description='continent', options=merged_5.continent.unique(), value='Europe & Central Asia')
 );
-
-
 
 
 
