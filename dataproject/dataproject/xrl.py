@@ -71,39 +71,28 @@ widgets.interact(plot,
 
 # Creating 5-year growth rates in GDP per cap in the continents:
 
-merged['year'] = merged['year'].apply(pd.to_numeric)
-is_div5 = numerged%5==0
-print(is_div5.head(33))
-
-merged_div5 = merged[is_div5]
-print(merged_div5.shape)
-merged_div5.head(5)
-
-
-merged_5 = merged.loc[::I]
-merged_5 = merged_5.reset_index(drop=True)
-merged_5 = merged_5.groupby('continent')
-merged_5_change = merged_5.gdp_cap.pct_change()
+merged_5 = merged[merged['year'].isin(['1970','1975','1980','1985','1990','1995','2000','2005','2010','2015'])]
+merged_5.set_index(['continent','year'],inplace=True)
+merged_5_grouped = merged_5.groupby('continent')
+merged_5_change = merged_5_grouped.gdp_cap.pct_change()
 merged_5_change.name = 'growth_5'
 
-for row in merged
-    merged.loc[::5,:]
-
-
-merged_5.set_index(['continent','year'],inplace=True)
 merged_5 = merged_5.join(merged_5_change)
 merged_5.reset_index(inplace=True)
 
 # Bar plot with dropdown widget:
-
+merged['year'] = merged['year'].apply(pd.to_numeric)
 def plot(dataframe, continent):
     I = dataframe['continent'] == continent
-    merged_grouped_first.plot.bar(x = 'continent', y = 'g_total')
+    dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5')
+    plt.xticks(range(1975,2015))
 
 widgets.interact(plot, 
-    dataframe = widgets.fixed(merged),
-    continent = widgets.Dropdown(description='continent', options=merged.continent.unique(), value='Europe & Central Asia')
-);
+    dataframe = widgets.fixed(merged_5),
+    continent = widgets.Dropdown(description='continent', options=merged_5.continent.unique(), value='Europe & Central Asia')
+)
+
+;
 
 
 
@@ -160,7 +149,6 @@ fig2.set_ylabel('GDP');
 box = fig2.get_position()
 fig2.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
 fig2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),ncol=5);
-
 
 
 
