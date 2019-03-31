@@ -23,4 +23,7 @@ figur1.set_ylabel('GDPcap')
 box = figur1.get_position() # find plot coordinates 
 figur1.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9]) # shrink height by 10% at bottom 
 figur1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),ncol=5) # Put a legend below current axis
-  
+
+
+#Måden hvorpå man omdanner til numeric
+merged['year'] = merged['year'].apply(pd.to_numeric)
