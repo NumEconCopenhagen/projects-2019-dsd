@@ -71,13 +71,12 @@ widgets.interact(plot,
 
 # Creating 5-year growth rates in GDP per cap in the continents:
 
-merged_5 = merged.loc[::5,:]
-merged_5 = merged_5.reset_index(drop=True)
-merged_5 = merged_5.groupby('continent')
-merged_5_change = merged_5.gdp_cap.pct_change()
+merged_5 = merged[merged['year'].isin(['1970','1975','1980','1985','1990','1995','2000','2005','2010','2015'])]
+merged_5.set_index(['continent','year'],inplace=True)
+merged_5_grouped = merged_5.groupby('continent')
+merged_5_change = merged_5_grouped.gdp_cap.pct_change()
 merged_5_change.name = 'growth_5'
 
-merged_5.set_index(['continent','year'],inplace=True)
 merged_5 = merged_5.join(merged_5_change)
 merged_5.reset_index(inplace=True)
 
@@ -85,11 +84,12 @@ merged_5.reset_index(inplace=True)
 
 def plot(dataframe, continent):
     I = dataframe['continent'] == continent
-    merged_grouped_first.plot.bar(x = 'continent', y = 'g_total')
+    dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5')
+    pd.year('2015','2015')
 
 widgets.interact(plot, 
-    dataframe = widgets.fixed(merged),
-    continent = widgets.Dropdown(description='continent', options=merged.continent.unique(), value='Europe & Central Asia')
+    dataframe = widgets.fixed(merged_5),
+    continent = widgets.Dropdown(description='continent', options=merged_5.continent.unique(), value='Europe & Central Asia')
 );
 
 
