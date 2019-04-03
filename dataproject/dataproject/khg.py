@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +5,6 @@ import ipywidgets as widgets
 from pandas_datareader import wb
 
 #continents = ['DK','ZA','US','GB','CN','IN','BR','CA','RU','TR','KR','VN','SE','DE','AL','FR','BG','IT','PK','ID','MX','PL']
-#%%
 continents = ['WLD', 'TSA', 'TMN', 'ECS', 'SSF', 'NAC', 'LCN','TEA']
 
 pop = wb.download(indicator='SP.POP.TOTL', country=continents, start=1970, end=2015)
@@ -23,6 +21,7 @@ merged = merged.rename(columns = {'country' : 'continent', 'NY.GDP.MKTP.KD' : 'g
 
 merged['gdp_cap'] = merged['gdp'] / merged['pop']
 
+# Change type of year-variable from object to float: 
 merged['year'] = merged.year.astype(float)
 
 # Sorting data:
@@ -42,7 +41,6 @@ merged.reset_index(inplace=True)
 
 merged['indexed'] = merged['gdp_cap']/merged['first']
 
-#%%
 def plot(fig):
     fig_indexed = fig.set_index('year')
     fig_indexed.groupby(['continent'])['indexed'].plot(legend=True);
@@ -60,14 +58,13 @@ merged.reset_index(inplace=True)
 
 merged['g_total'] = merged['last']/merged['first']*100
 
-#%%
 # Dropdown widget on pop and gdp_cap development:
 
 def plot(dataframe, continent):
     I = dataframe['continent'] == continent
-    ax_gdp = dataframe.loc[I,:].plot(x='year', y = 'gdp', style = '-o', legend = 'False')
-    ax_pop = dataframe.loc[I,:].plot(x='year', y = 'pop', style = '-o', legend = 'False')
-
+    fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
+    ax_gdp = dataframe.loc[I,:].plot(x='year', y = 'gdp', style = '-o', legend = 'False', ax=ax[0])
+    ax_pop = dataframe.loc[I,:].plot(x='year', y = 'pop', style = '-o', legend = 'False', ax=ax[1])
 
 widgets.interact(plot, 
     dataframe = widgets.fixed(merged),
@@ -98,7 +95,6 @@ widgets.interact(plot,
 );
 
 
-"""
 # Yearly growth rate in GDP and population:
 
 merged_yearly = merged.groupby('continent')['gdp_cap'].pct_change()
@@ -118,7 +114,6 @@ growth = first/last*100
 print(growth)
 
 growth.groupby('index')['pop'].plot(kind='bar',figsize=(10,2))
-"""
 
 
 # Scatter of average one-year growth in GDP per capita and population:
