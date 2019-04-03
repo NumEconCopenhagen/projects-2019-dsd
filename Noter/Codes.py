@@ -36,3 +36,14 @@ print(is_div5.head(33))
 merged_div5 = merged[is_div5]
 print(merged_div5.shape)
 merged_div5.head(5)
+
+# Growth in the period 1970-2017 for each continent:
+
+merged_grouped_last = merged_grouped.gdp_cap.last()
+merged_grouped_last.name = 'last'
+
+merged.set_index(['continent','year'],inplace=True)
+merged = merged.join(merged_grouped_last)
+merged.reset_index(inplace=True)
+
+merged['g_total'] = merged['last']/merged['first']*100
