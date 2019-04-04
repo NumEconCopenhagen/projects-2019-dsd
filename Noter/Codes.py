@@ -47,3 +47,13 @@ merged = merged.join(merged_grouped_last)
 merged.reset_index(inplace=True)
 
 merged['g_total'] = merged['last']/merged['first']*100
+
+# Figure showing the yearly population growth rate in each continent:
+
+fig1 = plt.figure()
+fig1 = plt.subplot(111)
+merged.set_index('year').groupby('continent')['pop'].plot(kind='line',legend=True);
+fig1.set_ylabel('Pop');
+box = fig1.get_position()
+fig1.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
+fig1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),ncol=5);
