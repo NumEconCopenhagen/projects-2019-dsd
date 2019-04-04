@@ -73,7 +73,7 @@ fig_indexed.legend(loc='upper center', bbox_to_anchor = (0.5, -0.15),ncol=5);
 
 # Dropdown widget on pop and gdp_cap development:
 
-def plot(dataframe, continent):
+def plot1(dataframe, continent):
     I = dataframe['continent'] == continent
     fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
     ax_gdp = dataframe.loc[I,:].plot(x = 'year', y = 'gdp_cap', legend = False, ax=ax[0])
@@ -83,7 +83,7 @@ def plot(dataframe, continent):
     ax_gdp.set_title("GDP per capita 1970-2015 in constant 2010 $US")
     ax_pop.set_title("Population 1970-2015 in 100 millons")
     
-widgets.interact(plot, 
+widgets.interact(plot1, 
     dataframe = widgets.fixed(merged),
     continent = widgets.Dropdown(description='continent', options=merged.continent.unique(), value='Europe & Central Asia')
 );
@@ -105,7 +105,7 @@ merged_5 = merged_5[merged_5['year'].isin(['1975','1980','1985','1990','1995','2
 
 # Bar plot with dropdown widget:
 
-def plot(dataframe, continent):
+def plot2(dataframe, continent):
     I = dataframe['continent'] == continent
     fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
     ax_growth5_gdp = dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5_gdp', legend = False, ax=ax[0])
@@ -115,7 +115,7 @@ def plot(dataframe, continent):
     ax_growth5_pop.set_ylabel('Growth in pct.')
     ax_growth5_pop.set_xlabel('5-year period')
 
-widgets.interact(plot, 
+widgets.interact(plot2, 
     dataframe = widgets.fixed(merged_5),
     continent = widgets.Dropdown(description='continent', options=merged_5.continent.unique(), value='Europe & Central Asia')
 );
