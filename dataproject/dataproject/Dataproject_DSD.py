@@ -16,7 +16,7 @@ pop.head(3)
 gdp = wb.download(indicator='NY.GDP.MKTP.KD', country=continents, start=1970, end=2015)
 gdp.head(3)
 
-### Merging datasets:
+### Merging GDP and population datasets:
 
 merged = pd.merge(gdp,pop, how='inner', on=['country','year'])
 merged = merged.reset_index()
@@ -30,27 +30,33 @@ merged['gdp_cap'] = merged['gdp'] / merged['pop']
 
 merged['year'] = merged.year.astype(float)
 
-### Sorting data:
+### Sorting data, as we want 1970 to be the first observation:
 
 merged.sort_values(by=['continent','year'], inplace=True)
 merged = merged.reset_index(drop = True)
 
-# Indexing GDP per cap and population:
+# Indexing GDP per cap and population, where 1970 = 1:
 
 merged_grouped = merged.groupby('continent')
-merged_grouped_first = merged_grouped.gdp_cap.first()
-merged_grouped_first.name = 'first'
+merged_grouped_gdp_first = merged_grouped.gdp_cap.first()
+merged_grouped_gdp_first.name = 'first_gdp'
+merged_grouped_pop_first = merged_grouped.pop.first()
+merged_grouped_pop_first.name = 'first_pop'
 
 merged.set_index(['continent','year'],inplace=True)
-merged = merged.join(merged_grouped_first)
+merged = merged.join(merged_grouped_gdp_first)
+merged = merged.join(merged_grouped_pop_first)
 merged.reset_index(inplace=True)
 
-merged['indexed'] = merged['gdp_cap']/merged['first']
+merged['indexed_gdp'] = merged['gdp_cap']/merged['first_gdp']
+merged['indexed_pop'] = merged['pop']/merged['first_pop']
+
+# Nået hertil!!!
 
 ### Plot indexed figure:
 
-fig_indexed = plt.figure()
-fig_indexed = plt.subplot(111)
+fig_indexed, ax = plt.subplots(ncols=2, figsize=(10,4))
+ax_1 = merged.plot(x = 'year, 
 merged.set_index('year').groupby('continent')['indexed'].plot(legend=True)
 fig_indexed.set_ylabel('GDP per capita, index 1970 = 1')
 box = fig_indexed.get_position()
