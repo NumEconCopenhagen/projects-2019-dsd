@@ -36,21 +36,37 @@ merged = merged.reset_index(drop = True)
 # Indexing GDP per cap and population:
 
 merged_grouped = merged.groupby('continent')
-merged_grouped_first = merged_grouped.gdp_cap.first()
-merged_grouped_first.name = 'first'
+merged_grouped_first_gdp = merged_grouped.gdp_cap.first()
+merged_grouped_first_gdp.name = 'first_gdp'
+merged_grouped_first_pop = merged_grouped.pop.first()
+merged_grouped_first_pop.name = 'first_pop'
 
 merged.set_index(['continent','year'],inplace=True)
-merged = merged.join(merged_grouped_first)
+merged = merged.join(merged_grouped_first_gdp)
+merged = merged.join(merged_grouped_first_pop)
 merged.reset_index(inplace=True)
 
-merged['indexed'] = merged['gdp_cap']/merged['first']
+merged['indexed_gdp'] = merged['gdp_cap']/merged['first_gdp']
+merged['indexed_pop'] = merged['pop']/merged['first_pop']
 
-### Plot indexed figure:
+### Plot indexed figure for GDP per cap:
 
 fig_indexed = plt.figure()
 fig_indexed = plt.subplot(111)
-merged.set_index('year').groupby('continent')['indexed'].plot(legend=True)
-fig_indexed.set_ylabel('GDP per capita, index 1970 = 1')
+merged.set_index('year').groupby('continent')['indexed_gdp'].plot(legend=True)
+fig_indexed.set_ylabel('Index')
+fig_indexed.set_title('GDP per capita in constant 2010 $US, index 1970 = 1')
+box = fig_indexed.get_position()
+fig_indexed.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
+fig_indexed.legend(loc='upper center', bbox_to_anchor = (0.5, -0.15),ncol=5);
+
+### Plot indexed figure for population:
+
+fig_indexed = plt.figure()
+fig_indexed = plt.subplot(111)
+merged.set_index('year').groupby('continent')['indexed_pop'].plot(legend=True)
+fig_indexed.set_ylabel('Index')
+fig_indexed.set_title('Population in 100 millions, index 1970 = 1')
 box = fig_indexed.get_position()
 fig_indexed.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
 fig_indexed.legend(loc='upper center', bbox_to_anchor = (0.5, -0.15),ncol=5);
