@@ -33,6 +33,23 @@ merged['year'] = merged.year.astype(float)
 merged.sort_values(by=['continent','year'], inplace=True)
 merged = merged.reset_index(drop = True)
 
+# Dropdown widget on pop and gdp_cap development:
+
+def plot1(dataframe, continent):
+    I = dataframe['continent'] == continent
+    fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
+    ax_gdp = dataframe.loc[I,:].plot(x = 'year', y = 'gdp_cap', legend = False, ax=ax[0])
+    ax_pop = dataframe.loc[I,:].plot(x = 'year', y = 'pop', legend = False, ax=ax[1])
+    ax_gdp.set_ylabel('GDP per capita')
+    ax_pop.set_ylabel('Population')
+    ax_gdp.set_title("GDP per capita 1970-2015 in constant 2010 $US")
+    ax_pop.set_title("Population 1970-2015 in 100 millons")
+    
+widgets.interact(plot1, 
+    dataframe = widgets.fixed(merged),
+    continent = widgets.Dropdown(description='continent', options=merged.continent.unique(), value='Europe & Central Asia')
+);
+
 # Indexing GDP per cap and population:
 
 merged_grouped = merged.groupby('continent')
@@ -71,22 +88,6 @@ box = fig_indexed.get_position()
 fig_indexed.set_position([box.x0, box.y0 + box.height * 0.1,box.width, box.height * 0.9])
 fig_indexed.legend(loc='upper center', bbox_to_anchor = (0.5, -0.15),ncol=5);
 
-# Dropdown widget on pop and gdp_cap development:
-
-def plot1(dataframe, continent):
-    I = dataframe['continent'] == continent
-    fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
-    ax_gdp = dataframe.loc[I,:].plot(x = 'year', y = 'gdp_cap', legend = False, ax=ax[0])
-    ax_pop = dataframe.loc[I,:].plot(x = 'year', y = 'pop', legend = False, ax=ax[1])
-    ax_gdp.set_ylabel('GDP per capita')
-    ax_pop.set_ylabel('Population')
-    ax_gdp.set_title("GDP per capita 1970-2015 in constant 2010 $US")
-    ax_pop.set_title("Population 1970-2015 in 100 millons")
-    
-widgets.interact(plot1, 
-    dataframe = widgets.fixed(merged),
-    continent = widgets.Dropdown(description='continent', options=merged.continent.unique(), value='Europe & Central Asia')
-);
 
 # Creating 5-year growth rates in GDP per cap and in the population in the continents:
 
@@ -114,6 +115,8 @@ def plot2(dataframe, continent):
     ax_growth5_gdp.set_xlabel('5-year period')
     ax_growth5_pop.set_ylabel('Growth in pct.')
     ax_growth5_pop.set_xlabel('5-year period')
+    ax_growth5_gdp.set_title("5-year growth rate in GDP per capita, \n 1970-2015 constant 2010 $US")
+    ax_growth5_pop.set_title("5-year growth rate in population, \n 1970-2015 in 100 millons")
 
 widgets.interact(plot2, 
     dataframe = widgets.fixed(merged_5),
