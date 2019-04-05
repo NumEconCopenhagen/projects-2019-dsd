@@ -108,7 +108,7 @@ merged_5 = merged_5[merged_5['year'].isin(['1975','1980','1985','1990','1995','2
 
 def plot2(dataframe, continent):
     I = dataframe['continent'] == continent
-    fig1, ax = plt.subplots(ncols=2, figsize=(10,4))
+    fig2, ax = plt.subplots(ncols=2, figsize=(10,4))
     ax_growth5_gdp = dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5_gdp', legend = False, ax=ax[0])
     ax_growth5_pop = dataframe.loc[I,:].plot.bar(x = 'year', y = 'growth_5_pop', legend = False, ax=ax[1])
     ax_growth5_gdp.set_ylabel('Growth in pct.')
